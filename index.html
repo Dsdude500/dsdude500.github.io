@@ -1,491 +1,175 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> <!-- This tells the browser it's an HTML5 document -->
+<html lang="en"> <!-- Begin the HTML page, set language to English -->
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7-Minute Workout Timer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" /> <!-- Character encoding so all symbols display correctly -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Makes it scale on phones -->
+  <title>7-Minute Workout Timer</title> <!-- Title shown in the browser tab -->
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
+  <style>
+    /* ----------- BASIC PAGE STYLING ----------- */
+    * { margin: 0; padding: 0; box-sizing: border-box; } /* Reset default browser spacing */
 
-        .container {
-            text-align: center;
-            max-width: 500px;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
+    body {
+      font-family: Arial, sans-serif;       /* Font style */
+      background: linear-gradient(135deg, #667eea, #764ba2); /* Background gradient */
+      height: 100vh;                        /* Full screen height */
+      display: flex;                        /* Use flexbox to center content */
+      justify-content: center;              /* Center horizontally */
+      align-items: center;                  /* Center vertically */
+      color: white;                         /* Text color */
+    }
 
-        h1 {
-            margin-bottom: 2rem;
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
+    .container {
+      text-align: center;                   /* Center text inside container */
+      padding: 20px;
+      background: rgba(255,255,255,0.1);    /* Transparent background */
+      border-radius: 15px;                  /* Rounded corners */
+    }
 
-        .timer-display {
-            font-size: 6rem;
-            font-weight: bold;
-            margin: 2rem 0;
-            transition: all 0.3s ease;
-        }
+    .timer-display {
+      font-size: 4rem;                      /* Big numbers for the timer */
+      margin: 20px 0;
+    }
 
-        .exercise-name {
-            font-size: 2rem;
-            margin: 1rem 0;
-            min-height: 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .phase {
-            font-size: 1.5rem;
-            margin: 1rem 0;
-            font-weight: 600;
-        }
-
-        .progress {
-            margin: 2rem 0;
-        }
-
-        .progress-text {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #4CAF50;
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 5px;
-        }
-
-        .controls {
-            margin-top: 2rem;
-        }
-
-        button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 1rem 2rem;
-            margin: 0.5rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .workout-phase {
-            color: #4CAF50;
-        }
-
-        .rest-phase {
-            color: #FF9800;
-        }
-
-        .completed {
-            color: #4CAF50;
-        }
-
-        .next-exercise {
-            font-size: 1rem;
-            margin-top: 1rem;
-            opacity: 0.8;
-        }
-    </style>
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>7-Minute Workout</h1>
-        
-        <div class="timer-display" id="timer">30</div>
-        
-        <div class="phase" id="phase">Get Ready!</div>
-        
-        <div class="exercise-name" id="exercise">Press Start to Begin</div>
-        
-        <div class="progress">
-            <div class="progress-text" id="progress-text">Exercise 0 of 12</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-        </div>
-        
-        <div class="next-exercise" id="next-exercise"></div>
-        
-        <div class="controls">
-            <button id="start-btn" onclick="startWorkout()">Start Workout</button>
-            <button id="pause-btn" onclick="togglePause()" style="display: none;">Pause</button>
-            <button id="reset-btn" onclick="resetWorkout()">Reset</button>
-        </div>
+  <!-- ----------- MAIN CONTENT ----------- -->
+  <div class="container">
+    <h1>7-Minute Workout</h1>
+
+    <!-- Timer numbers (like 30, 29, 28...) -->
+    <div class="timer-display" id="timer">30</div>
+
+    <!-- Show if it’s workout, rest, or complete -->
+    <div id="phase">Get Ready!</div>
+
+    <!-- Show the current exercise name -->
+    <div id="exercise">Press Start to Begin</div>
+
+    <!-- Simple buttons to control timer -->
+    <div>
+      <button id="start-btn">Start</button>
+      <button id="pause-btn" style="display:none;">Pause</button>
+      <button id="reset-btn">Reset</button>
     </div>
+  </div>
 
-    <script>
-        // ==============================================
-        // EXERCISE DATA AND STATE VARIABLES
-        // ==============================================
-        
-        // Array of all 12 exercises in the 7-minute workout
-        const exercises = [
-            "Jumping Jacks",
-            "Wall Sits",
-            "Push-ups",
-            "Abdominal Crunches",
-            "Step-ups",
-            "Squats",
-            "Triceps Dips",
-            "Plank",
-            "High Knees Running",
-            "Lunges",
-            "Push-up Rotation",
-            "Side Planks"
-        ];
+  <!-- ----------- JAVASCRIPT LOGIC ----------- -->
+  <script>
+    // List of exercises we’ll cycle through
+    const exercises = [
+      "Jumping Jacks","Wall Sit","Push-ups","Crunches",
+      "Step-ups","Squats","Triceps Dips","Plank",
+      "High Knees","Lunges","Push-up Rotation","Side Plank"
+    ];
 
-        // Timer state variables
-        let currentExercise = 0;        // Which exercise we're on (0-11)
-        let timeLeft = 30;              // Seconds remaining in current phase
-        let isWorkout = true;           // true = 30sec workout, false = 10sec rest
-        let isRunning = false;          // Is the timer currently running?
-        let isPaused = false;           // Is the timer paused?
-        let timer;                      // Stores the setInterval timer ID
-        let workoutStarted = false;     // Has the user started the workout yet?
+    // ----- VARIABLES TO KEEP TRACK OF STATE -----
+    let currentExercise = 0;    // Which exercise number we’re on
+    let timeLeft = 30;          // Seconds left in the current phase
+    let isWorkout = true;       // true = exercise, false = rest
+    let timer;                  // Holds the interval so we can stop it
+    let workoutStarted = false; // Has the workout begun?
 
-        // DOM element references - get them once for better performance
-        const timerDisplay = document.getElementById('timer');
-        const phaseDisplay = document.getElementById('phase');
-        const exerciseDisplay = document.getElementById('exercise');
-        const progressText = document.getElementById('progress-text');
-        const progressFill = document.getElementById('progress-fill');
-        const nextExercise = document.getElementById('next-exercise');
-        const startBtn = document.getElementById('start-btn');
-        const pauseBtn = document.getElementById('pause-btn');
+    // ----- GRAB ELEMENTS FROM THE PAGE -----
+    const timerDisplay = document.getElementById('timer');
+    const phaseDisplay = document.getElementById('phase');
+    const exerciseDisplay = document.getElementById('exercise');
+    const startBtn = document.getElementById('start-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const resetBtn = document.getElementById('reset-btn');
 
-        // ==============================================
-        // DISPLAY UPDATE FUNCTION
-        // ==============================================
-        
-        // Updates all the visual elements on the screen
-        function updateDisplay() {
-            // Always show the current time remaining
-            timerDisplay.textContent = timeLeft;
-            
-            // If workout hasn't started yet, show initial state
-            if (!workoutStarted) {
-                phaseDisplay.textContent = "Get Ready!";
-                phaseDisplay.className = "phase"; // Default styling
-                return;
-            }
+    // ----- UPDATE THE SCREEN -----
+    function updateDisplay() {
+      timerDisplay.textContent = timeLeft; // Show seconds left
 
-            // If all exercises are complete
-            if (currentExercise >= exercises.length) {
-                phaseDisplay.textContent = "Workout Complete!";
-                phaseDisplay.className = "phase completed"; // Green styling
-                exerciseDisplay.textContent = "Great job! 🎉";
-                nextExercise.textContent = "";
-                return;
-            }
+      if (!workoutStarted) {
+        phaseDisplay.textContent = "Get Ready!";
+        return; // Stop here if workout not started
+      }
 
-            // Update display based on current phase (workout vs rest)
-            if (isWorkout) {
-                // During 30-second workout phase
-                phaseDisplay.textContent = "WORK IT!";
-                phaseDisplay.className = "phase workout-phase"; // Green styling
-                exerciseDisplay.textContent = exercises[currentExercise];
-            } else {
-                // During 10-second rest phase
-                phaseDisplay.textContent = "REST";
-                phaseDisplay.className = "phase rest-phase"; // Orange styling
-                exerciseDisplay.textContent = "Take a break";
-                
-                // Show what exercise is coming up next
-                if (currentExercise + 1 < exercises.length) {
-                    nextExercise.textContent = `Next: ${exercises[currentExercise + 1]}`;
-                } else {
-                    nextExercise.textContent = "Final exercise complete!";
-                }
-            }
+      if (currentExercise >= exercises.length) {
+        // If we’ve gone through all 12 exercises
+        phaseDisplay.textContent = "Workout Complete!";
+        exerciseDisplay.textContent = "Great job! 🎉";
+      } else if (isWorkout) {
+        // Show workout phase
+        phaseDisplay.textContent = "WORK!";
+        exerciseDisplay.textContent = exercises[currentExercise];
+      } else {
+        // Show rest phase
+        phaseDisplay.textContent = "REST";
+        exerciseDisplay.textContent = "Take a break";
+      }
+    }
 
-            // Update progress indicator
-            progressText.textContent = `Exercise ${currentExercise + 1} of ${exercises.length}`;
-            
-            // Calculate overall progress percentage
-            // Each exercise = 40 seconds total (30 work + 10 rest)
-            // Current progress = completed exercises + current exercise progress
-            const completedTime = currentExercise * 40; // Time from completed exercises
-            const currentTime = isWorkout ? (30 - timeLeft) : (30 + 10 - timeLeft); // Time in current exercise
-            const totalTime = exercises.length * 40; // Total workout time
-            const progress = ((completedTime + currentTime) / totalTime) * 100;
-            progressFill.style.width = progress + '%';
-        }
-
-        // ==============================================
-        // AUDIO SYSTEM - Web Audio API
-        // ==============================================
-        
-        // Audio variables
-        let audioContext;    // Main audio context for generating sounds
-        let tickSound;       // Function to play tick sound
-        let whistleSound;    // Function to play whistle sound
-
-        // Initialize the audio system (must be called after user interaction)
-        function initAudio() {
-            if (!audioContext) {
-                // Create audio context (works across different browsers)
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                createSounds();
-            }
-        }
-
-        // Create the audio functions for our sounds
-        function createSounds() {
-            // Create tick sound (800Hz beep for 0.1 seconds at 10% volume)
-            tickSound = createBeep(800, 0.1, 0.1);
-            
-            // Create whistle sound (two-tone whistle effect)
-            whistleSound = createWhistle();
-        }
-
-        // Factory function to create a simple beep sound
-        function createBeep(frequency, duration, volume) {
-            return function() {
-                if (!audioContext) return; // Exit if audio not initialized
-                
-                // Create oscillator (sound generator) and gain (volume control)
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                // Connect audio nodes: oscillator -> gain -> speakers
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                // Set up the beep sound
-                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-                oscillator.type = 'sine'; // Smooth sine wave sound
-                
-                // Create fade in/out envelope to avoid audio "clicks"
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);                           // Start silent
-                gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);     // Fade in quickly
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration); // Fade out
-                
-                // Play the sound for the specified duration
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + duration);
-            };
-        }
-
-        // Create a two-tone whistle sound for exercise start/end
-        function createWhistle() {
-            return function() {
-                if (!audioContext) return; // Exit if audio not initialized
-                
-                // Create two oscillators for the two-tone effect
-                const oscillator1 = audioContext.createOscillator();
-                const oscillator2 = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                // Connect both oscillators to the same gain node
-                oscillator1.connect(gainNode);
-                oscillator2.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                // Set up the frequency sweep for whistle effect
-                // Oscillator 1: 1000Hz -> 1200Hz
-                oscillator1.frequency.setValueAtTime(1000, audioContext.currentTime);
-                oscillator1.frequency.setValueAtTime(1200, audioContext.currentTime + 0.1);
-                
-                // Oscillator 2: 1200Hz -> 1000Hz (opposite direction)
-                oscillator2.frequency.setValueAtTime(1200, audioContext.currentTime);
-                oscillator2.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
-                
-                oscillator1.type = 'sine';
-                oscillator2.type = 'sine';
-                
-                // Create the whistle envelope (longer than the beep)
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.01);    // Fade in
-                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.15);    // Hold
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3); // Fade out
-                
-                // Play both oscillators for 0.3 seconds
-                oscillator1.start(audioContext.currentTime);
-                oscillator1.stop(audioContext.currentTime + 0.3);
-                oscillator2.start(audioContext.currentTime);
-                oscillator2.stop(audioContext.currentTime + 0.3);
-            };
-        }
-
-        // ==============================================
-        // TIMER LOGIC - Main countdown function
-        // ==============================================
-        
-        // This function is called every second when the timer is running
-        function tick() {
-            timeLeft--; // Decrease time by 1 second
-            updateDisplay(); // Update the screen
-
-            // Play tick sound during workout phase only (not during rest)
-            if (isWorkout && workoutStarted && timeLeft > 0) {
-                tickSound(); // Beep sound for each second
-            }
-
-            // Check if current phase (workout or rest) is complete
-            if (timeLeft <= 0) {
-                if (isWorkout) {
-                    // End of 30-second workout period
-                    whistleSound(); // Play whistle to signal end of exercise
-                    
-                    // Switch to 10-second rest period
-                    isWorkout = false;
-                    timeLeft = 10;
-                } else {
-                    // End of 10-second rest period
-                    currentExercise++; // Move to next exercise
-                    
-                    // Check if we've completed all exercises
-                    if (currentExercise >= exercises.length) {
-                        completeWorkout(); // End the entire workout
-                        return;
-                    }
-                    
-                    // Start next exercise
-                    whistleSound(); // Play whistle to signal start of new exercise
-                    isWorkout = true; // Switch back to workout phase
-                    timeLeft = 30;    // Reset to 30 seconds
-                    nextExercise.textContent = ""; // Clear "Next:" text
-                }
-            }
-        }
-
-        // ==============================================
-        // CONTROL FUNCTIONS - Start, Pause, Reset
-        // ==============================================
-        
-        // Start or restart the workout
-        function startWorkout() {
-            // Initialize audio on first user interaction (required by browsers)
-            initAudio();
-            
-            // If this is the first time starting, set up initial state
-            if (!workoutStarted) {
-                workoutStarted = true;
-                currentExercise = 0;  // Start with first exercise
-                timeLeft = 30;        // 30 seconds for first exercise
-                isWorkout = true;     // Start in workout phase
-                
-                // Play starting whistle after a short delay
-                setTimeout(() => whistleSound(), 100);
-            }
-            
-            // Start the timer
-            isRunning = true;
-            isPaused = false;
-            timer = setInterval(tick, 1000); // Call tick() every 1000ms (1 second)
-            
-            // Update button visibility
-            startBtn.style.display = 'none';         // Hide start button
-            pauseBtn.style.display = 'inline-block'; // Show pause button
-            pauseBtn.textContent = 'Pause';
-            
-            updateDisplay(); // Refresh the screen
-        }
-
-        // Pause or resume the workout
-        function togglePause() {
-            if (isPaused) {
-                // Currently paused, so resume
-                timer = setInterval(tick, 1000); // Restart the timer
-                isPaused = false;
-                pauseBtn.textContent = 'Pause';
-            } else {
-                // Currently running, so pause
-                clearInterval(timer); // Stop the timer
-                isPaused = true;
-                pauseBtn.textContent = 'Resume';
-            }
-        }
-
-        // Reset everything back to the beginning
-        function resetWorkout() {
-            // Stop the timer
+    // ----- MAIN TIMER LOOP -----
+    function tick() {
+      timeLeft--; // Count down by 1 second
+      if (timeLeft <= 0) {
+        if (isWorkout) {
+          // Finished workout phase
+          if (currentExercise === exercises.length - 1) {
+            // If it was the last exercise, end workout
             clearInterval(timer);
-            
-            // Reset all state variables to initial values
-            currentExercise = 0;
-            timeLeft = 30;
-            isWorkout = true;
-            isRunning = false;
-            isPaused = false;
-            workoutStarted = false;
-            
-            // Reset button visibility
-            startBtn.style.display = 'inline-block';  // Show start button
-            pauseBtn.style.display = 'none';          // Hide pause button
-            
-            // Reset display text
-            exerciseDisplay.textContent = "Press Start to Begin";
-            nextExercise.textContent = "";
-            progressText.textContent = "Exercise 0 of 12";
-            progressFill.style.width = '0%'; // Empty progress bar
-            
-            updateDisplay(); // Refresh the screen
+            updateDisplay();
+            return;
+          }
+          // Switch to rest
+          isWorkout = false;
+          timeLeft = 10; // rest is 10 seconds
+        } else {
+          // Finished rest phase, move to next exercise
+          isWorkout = true;
+          currentExercise++;
+          timeLeft = 30; // workout is 30 seconds
         }
+      }
+      updateDisplay(); // Refresh screen
+    }
 
-        // Called when all exercises are finished
-        function completeWorkout() {
-            clearInterval(timer); // Stop the timer
-            isRunning = false;
-            
-            // Reset buttons for potential restart
-            startBtn.style.display = 'inline-block';
-            pauseBtn.style.display = 'none';
-            startBtn.textContent = 'Start Again'; // Change text to indicate restart
-            
-            updateDisplay(); // Show completion message
-        }
+    // ----- BUTTON BEHAVIOR -----
+    startBtn.addEventListener('click', () => {
+      if (!workoutStarted) {
+        workoutStarted = true; // Start workout for first time
+        currentExercise = 0;   // Reset to first exercise
+        isWorkout = true;
+        timeLeft = 30;
+      }
+      clearInterval(timer);           // Clear old interval if any
+      timer = setInterval(tick, 1000); // Run tick every 1 second
+      startBtn.style.display = "none"; // Hide start button
+      pauseBtn.style.display = "inline-block"; // Show pause
+    });
 
-        // ==============================================
-        // INITIALIZATION
-        // ==============================================
-        
-        // Set up the initial display when the page loads
-        updateDisplay();
-    </script>
+    pauseBtn.addEventListener('click', () => {
+      clearInterval(timer); // Stop counting down
+      pauseBtn.style.display = "none";
+      startBtn.style.display = "inline-block";
+      startBtn.textContent = "Resume"; // Change label
+    });
+
+    resetBtn.addEventListener('click', () => {
+      clearInterval(timer);       // Stop timer
+      workoutStarted = false;     // Reset state
+      currentExercise = 0;
+      timeLeft = 30;
+      isWorkout = true;
+      startBtn.textContent = "Start"; // Reset label
+      startBtn.style.display = "inline-block";
+      pauseBtn.style.display = "none";
+      updateDisplay(); // Reset text on screen
+    });
+
+    // ----- INITIAL DISPLAY -----
+    updateDisplay(); // Show initial state
+  </script>
 </body>
 </html>
