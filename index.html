@@ -1,491 +1,882 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7-Minute Workout Timer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Link Directory Builder</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa5b1;
+      --accent:#6ee7b7;
+      --glass: rgba(255,255,255,0.03);
+      --danger:#ff6b6b;
+      --radius:12px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+                   Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#071022 0%, #07182b 100%);
+      color:#e6eef6;
+      padding:28px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
+    .app {
+      max-width:1100px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap:20px;
+      align-items:start;
+    }
 
-        .container {
-            text-align: center;
-            max-width: 500px;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
+    header{
+      grid-column:1/-1;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:6px;
+    }
+    header h1{margin:0;font-size:20px}
+    header p{margin:0;color:var(--muted);font-size:13px}
 
-        h1 {
-            margin-bottom: 2rem;
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow: 0 6px 18px rgba(3,8,20,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
 
-        .timer-display {
-            font-size: 6rem;
-            font-weight: bold;
-            margin: 2rem 0;
-            transition: all 0.3s ease;
-        }
+    .left .panel + .panel { margin-top:12px; }
 
-        .exercise-name {
-            font-size: 2rem;
-            margin: 1rem 0;
-            min-height: 3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type="text"], input[type="url"], textarea, select {
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.04);
+      background:var(--glass);
+      color:inherit;
+      font-size:14px;
+      outline:none;
+    }
+    textarea{min-height:72px; resize:vertical}
 
-        .phase {
-            font-size: 1.5rem;
-            margin: 1rem 0;
-            font-weight: 600;
-        }
+    .row{display:flex; gap:10px}
+    .row > *{flex:1}
 
-        .progress {
-            margin: 2rem 0;
-        }
+    button{
+      background:linear-gradient(180deg,var(--accent), #39d6a6);
+      border:0;
+      color:#042016;
+      padding:10px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow: 0 6px 16px rgba(54,187,136,0.12);
+    }
+    .btn-ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow:none;
+    }
+    .btn-danger{background:linear-gradient(180deg,var(--danger), #ff4b4b); color:#fff}
 
-        .progress-text {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
+    .small{font-size:12px;padding:8px 10px;border-radius:8px}
+    .muted{color:var(--muted);font-size:13px}
 
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 5px;
-            overflow: hidden;
-        }
+    .list {
+      margin-top:12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      max-height:60vh;
+      overflow:auto;
+      padding-right:6px;
+    }
 
-        .progress-fill {
-            height: 100%;
-            background: #4CAF50;
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 5px;
-        }
+    .item{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .item .meta{flex:1}
+    .item h4{margin:0;font-size:14px}
+    .item p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .item .controls{display:flex;gap:8px}
 
-        .controls {
-            margin-top: 2rem;
-        }
+    .category-pill{
+      display:inline-block;
+      padding:6px 8px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.03);
+      font-size:12px;
+      color:var(--muted);
+      margin-right:6px;
+    }
 
-        button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 1rem 2rem;
-            margin: 0.5rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    .top-actions{display:flex; gap:8px; align-items:center}
 
-        button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-        }
+    .preview{
+      padding:18px;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      min-height:240px;
+      overflow:auto;
+    }
 
-        button:active {
-            transform: translateY(0);
-        }
+    .export-preview{
+      background:#020617;
+      color:#dbeefd;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      padding:12px;border-radius:8px;
+      max-height:40vh; overflow:auto; font-size:13px;
+    }
 
-        .workout-phase {
-            color: #4CAF50;
-        }
+    .search {
+      display:flex;
+      gap:8px;
+      margin-bottom:10px;
+      align-items:center;
+    }
 
-        .rest-phase {
-            color: #FF9800;
-        }
+    .flex-between{display:flex;justify-content:space-between;align-items:center}
 
-        .completed {
-            color: #4CAF50;
-        }
+    footer{grid-column:1/-1; margin-top:12px; display:flex; justify-content:center; gap:8px; color:var(--muted); font-size:13px}
 
-        .next-exercise {
-            font-size: 1rem;
-            margin-top: 1rem;
-            opacity: 0.8;
-        }
-    </style>
+    /* Responsive */
+    @media (max-width:980px){
+      .app{grid-template-columns: 1fr; padding-bottom:40px}
+      header{flex-direction:column; align-items: flex-start; gap:8px}
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>7-Minute Workout</h1>
-        
-        <div class="timer-display" id="timer">30</div>
-        
-        <div class="phase" id="phase">Get Ready!</div>
-        
-        <div class="exercise-name" id="exercise">Press Start to Begin</div>
-        
-        <div class="progress">
-            <div class="progress-text" id="progress-text">Exercise 0 of 12</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
+  <div class="app" role="application" aria-label="Link directory builder">
+    <header>
+      <div>
+        <h1>Link Directory Builder</h1>
+        <p class="muted">Create, import, export or preview a polished HTML link directory — categories & subcategories included.</p>
+      </div>
+      <div class="top-actions">
+        <button id="export-html-btn">Export HTML</button>
+        <button id="export-json-btn" class="btn-ghost">Export JSON</button>
+        <button id="import-json-btn" class="btn-ghost small">Import JSON</button>
+        <input id="import-file" type="file" accept="application/json" style="display:none" />
+      </div>
+    </header>
+
+    <!-- Left column: management -->
+    <div class="left">
+      <div class="panel">
+        <h3 style="margin-top:0">Categories</h3>
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+          <input id="new-category" type="text" placeholder="New category (e.g. Tools)" />
+          <button id="add-category" class="small">Add</button>
         </div>
-        
-        <div class="next-exercise" id="next-exercise"></div>
-        
-        <div class="controls">
-            <button id="start-btn" onclick="startWorkout()">Start Workout</button>
-            <button id="pause-btn" onclick="togglePause()" style="display: none;">Pause</button>
-            <button id="reset-btn" onclick="resetWorkout()">Reset</button>
+
+        <div id="categories-list" class="list" aria-live="polite"></div>
+
+        <hr style="opacity:.06;border:none;height:1px;margin:12px 0;background:linear-gradient(90deg,transparent,#ffffff0d,transparent)">
+
+        <h3 style="margin-top:0">Subcategories (select category first)</h3>
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+          <select id="category-for-sub" aria-label="Choose category for new subcategory"></select>
+          <input id="new-subcategory" type="text" placeholder="New subcategory (e.g. Productivity)" />
+          <button id="add-subcategory" class="small">Add</button>
         </div>
+
+        <div id="subcategories-list" class="list muted"></div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <h3 style="margin-top:0">Quick import (paste JSON)</h3>
+        <textarea id="paste-import" placeholder='Paste JSON array or {categories, links} and click "Apply"'></textarea>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button id="apply-paste" class="small">Apply</button>
+          <button id="clear-storage" class="btn-ghost small">Reset</button>
+        </div>
+      </div>
     </div>
 
-    <script>
-        // ==============================================
-        // EXERCISE DATA AND STATE VARIABLES
-        // ==============================================
-        
-        // Array of all 12 exercises in the 7-minute workout
-        const exercises = [
-            "Jumping Jacks",
-            "Wall Sits",
-            "Push-ups",
-            "Abdominal Crunches",
-            "Step-ups",
-            "Squats",
-            "Triceps Dips",
-            "Plank",
-            "High Knees Running",
-            "Lunges",
-            "Push-up Rotation",
-            "Side Planks"
-        ];
+    <!-- Right column: link editor + preview -->
+    <div>
+      <div class="panel">
+        <div class="flex-between">
+          <h3 style="margin:0">Add / Edit Link</h3>
+          <div class="muted">Tip: you can import/export JSON or export a standalone HTML file</div>
+        </div>
 
-        // Timer state variables
-        let currentExercise = 0;        // Which exercise we're on (0-11)
-        let timeLeft = 30;              // Seconds remaining in current phase
-        let isWorkout = true;           // true = 30sec workout, false = 10sec rest
-        let isRunning = false;          // Is the timer currently running?
-        let isPaused = false;           // Is the timer paused?
-        let timer;                      // Stores the setInterval timer ID
-        let workoutStarted = false;     // Has the user started the workout yet?
+        <div style="margin-top:12px;">
+          <label>Title</label>
+          <input id="link-title" type="text" placeholder="Example: MDN Web Docs" />
 
-        // DOM element references - get them once for better performance
-        const timerDisplay = document.getElementById('timer');
-        const phaseDisplay = document.getElementById('phase');
-        const exerciseDisplay = document.getElementById('exercise');
-        const progressText = document.getElementById('progress-text');
-        const progressFill = document.getElementById('progress-fill');
-        const nextExercise = document.getElementById('next-exercise');
-        const startBtn = document.getElementById('start-btn');
-        const pauseBtn = document.getElementById('pause-btn');
+          <label style="margin-top:10px">URL</label>
+          <input id="link-url" type="url" placeholder="https://..." />
 
-        // ==============================================
-        // DISPLAY UPDATE FUNCTION
-        // ==============================================
-        
-        // Updates all the visual elements on the screen
-        function updateDisplay() {
-            // Always show the current time remaining
-            timerDisplay.textContent = timeLeft;
-            
-            // If workout hasn't started yet, show initial state
-            if (!workoutStarted) {
-                phaseDisplay.textContent = "Get Ready!";
-                phaseDisplay.className = "phase"; // Default styling
-                return;
-            }
+          <div class="row" style="margin-top:10px">
+            <div>
+              <label>Category</label>
+              <select id="link-category"></select>
+            </div>
+            <div>
+              <label>Subcategory</label>
+              <select id="link-subcategory"></select>
+            </div>
+          </div>
 
-            // If all exercises are complete
-            if (currentExercise >= exercises.length) {
-                phaseDisplay.textContent = "Workout Complete!";
-                phaseDisplay.className = "phase completed"; // Green styling
-                exerciseDisplay.textContent = "Great job! 🎉";
-                nextExercise.textContent = "";
-                return;
-            }
+          <label style="margin-top:10px">Description</label>
+          <textarea id="link-desc" placeholder="Short blurb that will show beneath the link"></textarea>
 
-            // Update display based on current phase (workout vs rest)
-            if (isWorkout) {
-                // During 30-second workout phase
-                phaseDisplay.textContent = "WORK IT!";
-                phaseDisplay.className = "phase workout-phase"; // Green styling
-                exerciseDisplay.textContent = exercises[currentExercise];
-            } else {
-                // During 10-second rest phase
-                phaseDisplay.textContent = "REST";
-                phaseDisplay.className = "phase rest-phase"; // Orange styling
-                exerciseDisplay.textContent = "Take a break";
-                
-                // Show what exercise is coming up next
-                if (currentExercise + 1 < exercises.length) {
-                    nextExercise.textContent = `Next: ${exercises[currentExercise + 1]}`;
-                } else {
-                    nextExercise.textContent = "Final exercise complete!";
-                }
-            }
+          <label style="margin-top:10px">Tags (comma separated)</label>
+          <input id="link-tags" type="text" placeholder="tag1, tag2" />
 
-            // Update progress indicator
-            progressText.textContent = `Exercise ${currentExercise + 1} of ${exercises.length}`;
-            
-            // Calculate overall progress percentage
-            // Each exercise = 40 seconds total (30 work + 10 rest)
-            // Current progress = completed exercises + current exercise progress
-            const completedTime = currentExercise * 40; // Time from completed exercises
-            const currentTime = isWorkout ? (30 - timeLeft) : (30 + 10 - timeLeft); // Time in current exercise
-            const totalTime = exercises.length * 40; // Total workout time
-            const progress = ((completedTime + currentTime) / totalTime) * 100;
-            progressFill.style.width = progress + '%';
+          <div style="display:flex; gap:8px; margin-top:12px">
+            <button id="save-link">Add Link</button>
+            <button id="clear-form" class="btn-ghost">Clear</button>
+            <button id="preview-html" class="btn-ghost">Preview Generated HTML</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <div class="flex-between">
+          <h3 style="margin:0">Links</h3>
+          <div>
+            <input id="search" type="text" placeholder="Search title, description or tags" style="padding:8px;border-radius:8px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:inherit" />
+          </div>
+        </div>
+
+        <div id="links-list" class="list" style="margin-top:10px"></div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <h3 style="margin-top:0">Preview / Export</h3>
+        <div class="muted" style="margin-bottom:8px">Preview shows how your exported HTML will be grouped by category & subcategory.</div>
+        <div id="preview" class="preview"></div>
+
+        <div style="margin-top:10px">
+          <label class="muted">Export preview (generated HTML)</label>
+          <pre id="export-output" class="export-preview" readonly></pre>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div>Built with ❤️ — open the generated HTML anywhere to share your directory.</div>
+    </footer>
+  </div>
+
+  <script>
+    // Data model stored in localStorage
+    const STORAGE_KEY = 'link_directory_v1';
+
+    // DOM references
+    const categoriesListEl = document.getElementById('categories-list');
+    const categoryForSub = document.getElementById('category-for-sub');
+    const subcategoriesListEl = document.getElementById('subcategories-list');
+    const linkCategory = document.getElementById('link-category');
+    const linkSubcategory = document.getElementById('link-subcategory');
+    const linksListEl = document.getElementById('links-list');
+    const previewEl = document.getElementById('preview');
+    const exportOutputEl = document.getElementById('export-output');
+
+    const newCategoryInput = document.getElementById('new-category');
+    const addCategoryBtn = document.getElementById('add-category');
+    const addSubcategoryBtn = document.getElementById('add-subcategory');
+    const newSubcategoryInput = document.getElementById('new-subcategory');
+
+    const titleInput = document.getElementById('link-title');
+    const urlInput = document.getElementById('link-url');
+    const descInput = document.getElementById('link-desc');
+    const tagsInput = document.getElementById('link-tags');
+    const saveLinkBtn = document.getElementById('save-link');
+    const clearFormBtn = document.getElementById('clear-form');
+
+    const exportHtmlBtn = document.getElementById('export-html-btn');
+    const exportJsonBtn = document.getElementById('export-json-btn');
+    const importJsonBtn = document.getElementById('import-json-btn');
+    const importFileInput = document.getElementById('import-file');
+    const applyPasteBtn = document.getElementById('apply-paste');
+    const pasteImport = document.getElementById('paste-import');
+    const clearStorageBtn = document.getElementById('clear-storage');
+    const previewHtmlBtn = document.getElementById('preview-html');
+    const searchInput = document.getElementById('search');
+
+    // In-memory state
+    let state = {
+      categories: [], // [{id, name, subcategories:[{id,name}] }]
+      links: [],      // [{id,title,url,description,categoryId,subcategoryId,tags:[]}]
+      editing: null   // link id if editing
+    };
+
+    // Utilities
+    const uid = (prefix='id') => prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+
+    function saveState(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        try{
+          state = JSON.parse(raw);
+        }catch(e){
+          console.error('Failed to parse stored state',e);
         }
+      } else {
+        // Seed with a sample category to make the UI friendly on first run
+        state.categories = [{id:uid('cat'), name:'General', subcategories:[]}];
+        state.links = [];
+        saveState();
+      }
+    }
 
-        // ==============================================
-        // AUDIO SYSTEM - Web Audio API
-        // ==============================================
-        
-        // Audio variables
-        let audioContext;    // Main audio context for generating sounds
-        let tickSound;       // Function to play tick sound
-        let whistleSound;    // Function to play whistle sound
+    // Rendering
+    function renderCategories(){
+      // categories list left
+      categoriesListEl.innerHTML = '';
+      categoryForSub.innerHTML = '';
+      linkCategory.innerHTML = '';
+      const categories = state.categories;
+      categories.forEach(cat=>{
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="meta">
+            <h4>${escapeHtml(cat.name)}</h4>
+            <p class="muted">${cat.subcategories.length} subcategory(s)</p>
+          </div>
+          <div class="controls">
+            <button class="btn-ghost small" data-action="select" data-id="${cat.id}">Edit</button>
+            <button class="btn-ghost small" data-action="delete" data-id="${cat.id}">Delete</button>
+          </div>
+        `;
+        categoriesListEl.appendChild(div);
 
-        // Initialize the audio system (must be called after user interaction)
-        function initAudio() {
-            if (!audioContext) {
-                // Create audio context (works across different browsers)
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                createSounds();
-            }
+        const opt = document.createElement('option');
+        opt.value = cat.id;
+        opt.textContent = cat.name;
+        categoryForSub.appendChild(opt);
+
+        const opt2 = opt.cloneNode(true);
+        linkCategory.appendChild(opt2);
+      });
+
+      // if nothing selected for subcategory add placeholder
+      if(linkCategory.options.length === 0){
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = '-- no category --';
+        linkCategory.appendChild(placeholder);
+      }
+      // keep selection triggered for other UI sync
+      syncSubcategoriesList();
+    }
+
+    function renderSubcategoriesForCategory(catId){
+      subcategoriesListEl.innerHTML = '';
+      const cat = state.categories.find(c=>c.id === catId);
+      if(!cat){
+        subcategoriesListEl.innerHTML = '<div class="muted">Select a category to see its subcategories</div>';
+        return;
+      }
+      cat.subcategories.forEach(sub=>{
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="meta">
+            <h4>${escapeHtml(sub.name)}</h4>
+            <p class="muted">Subcategory of ${escapeHtml(cat.name)}</p>
+          </div>
+          <div class="controls">
+            <button class="btn-ghost small" data-action="edit-sub" data-id="${sub.id}" data-cat="${cat.id}">Edit</button>
+            <button class="btn-ghost small" data-action="del-sub" data-id="${sub.id}" data-cat="${cat.id}">Delete</button>
+          </div>
+        `;
+        subcategoriesListEl.appendChild(div);
+      });
+      if(cat.subcategories.length === 0){
+        subcategoriesListEl.innerHTML = '<div class="muted">No subcategories yet</div>';
+      }
+    }
+
+    function syncSubcategoriesList(){
+      // update right-hand selects for link editor and subcategory add target
+      const selectedCatId = categoryForSub.value || (linkCategory.value || '');
+      // for link editor linkSubcategory options:
+      linkSubcategory.innerHTML = '';
+      const cat = state.categories.find(c=>c.id === selectedCatId) || state.categories[0] || null;
+      if(cat){
+        const emptyOpt = document.createElement('option');
+        emptyOpt.value = '';
+        emptyOpt.textContent = '-- none --';
+        linkSubcategory.appendChild(emptyOpt);
+        cat.subcategories.forEach(s=>{
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = s.name;
+          linkSubcategory.appendChild(opt);
+        });
+      } else {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = '-- no subcategories --';
+        linkSubcategory.appendChild(opt);
+      }
+
+      // Render the left subcategories list for the category selected in the "add subcategory" select
+      renderSubcategoriesForCategory(categoryForSub.value || (state.categories[0] && state.categories[0].id));
+    }
+
+    function renderLinks(filterText=''){
+      linksListEl.innerHTML = '';
+      const list = state.links
+        .filter(l=>{
+          if(!filterText) return true;
+          const q = filterText.toLowerCase();
+          return l.title.toLowerCase().includes(q) ||
+                 (l.description && l.description.toLowerCase().includes(q)) ||
+                 (l.tags && l.tags.join(',').toLowerCase().includes(q));
+        })
+        .sort((a,b)=> (a.title || '').localeCompare(b.title || ''));
+
+      list.forEach(link=>{
+        const cat = state.categories.find(c=>c.id===link.categoryId);
+        const sub = cat && cat.subcategories.find(s=>s.id===link.subcategoryId);
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="meta">
+            <h4><a href="${escapeHtmlAttr(link.url)}" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none">${escapeHtml(link.title)}</a></h4>
+            <p class="muted">${escapeHtml(link.description || '')}</p>
+            <div style="margin-top:6px">
+              ${cat ? `<span class="category-pill">${escapeHtml(cat.name)}</span>` : ''}
+              ${sub ? `<span class="category-pill">${escapeHtml(sub.name)}</span>` : ''}
+            </div>
+          </div>
+          <div class="controls">
+            <button class="btn-ghost small" data-action="edit" data-id="${link.id}">Edit</button>
+            <button class="btn-ghost small" data-action="move-up" data-id="${link.id}">▲</button>
+            <button class="btn-ghost small" data-action="move-down" data-id="${link.id}">▼</button>
+            <button class="btn-danger small" data-action="delete" data-id="${link.id}">Del</button>
+          </div>
+        `;
+        linksListEl.appendChild(div);
+      });
+
+      if(list.length===0){
+        linksListEl.innerHTML = '<div class="muted">No links yet</div>';
+      }
+
+      renderPreview();
+    }
+
+    function renderPreview(){
+      // Group links by category > subcategory
+      const groups = {};
+      state.links.forEach(link=>{
+        const cat = state.categories.find(c=>c.id===link.categoryId);
+        const catName = (cat && cat.name) || 'Uncategorized';
+        const sub = cat && cat.subcategories.find(s=>s.id===link.subcategoryId);
+        const subName = (sub && sub.name) || null;
+
+        groups[catName] = groups[catName] || {};
+        const key = subName || '_none';
+        groups[catName][key] = groups[catName][key] || [];
+        groups[catName][key].push(link);
+      });
+
+      // Build preview HTML
+      let html = '';
+      for(const [catName, subs] of Object.entries(groups)){
+        html += `<section style="margin-bottom:18px"><h3 style="margin:0 0 8px">${escapeHtml(catName)}</h3>`;
+        for(const [subName, links] of Object.entries(subs)){
+          if(subName !== '_none'){
+            html += `<h4 style="margin:6px 0;color:var(--muted)">${escapeHtml(subName)}</h4>`;
+          }
+          html += `<ul style="list-style:none;padding:0;margin:6px 0 12px">`;
+          links.forEach(l=>{
+            html += `<li style="margin-bottom:10px">
+              <a href="${escapeHtmlAttr(l.url)}" target="_blank" rel="noopener noreferrer" style="font-weight:600;color:var(--accent);text-decoration:none">${escapeHtml(l.title)}</a>
+              <div style="color:var(--muted);font-size:13px">${escapeHtml(l.description || '')}</div>
+            </li>`;
+          });
+          html += `</ul>`;
         }
+        html += `</section>`;
+      }
 
-        // Create the audio functions for our sounds
-        function createSounds() {
-            // Create tick sound (800Hz beep for 0.1 seconds at 10% volume)
-            tickSound = createBeep(800, 0.1, 0.1);
-            
-            // Create whistle sound (two-tone whistle effect)
-            whistleSound = createWhistle();
+      previewEl.innerHTML = html || '<div class="muted">No preview available</div>';
+      // Update export-output with generated standalone HTML
+      exportOutputEl.textContent = generateStandaloneHTML();
+    }
+
+    // Actions
+    function addCategory(name){
+      if(!name || !name.trim()) return;
+      const newCat = {id:uid('cat'), name: name.trim(), subcategories: []};
+      state.categories.push(newCat);
+      saveState();
+      renderCategories();
+      renderLinks(searchInput.value);
+    }
+
+    function renameCategory(catId, newName){
+      const cat = state.categories.find(c=>c.id===catId);
+      if(cat && newName && newName.trim()){
+        cat.name = newName.trim();
+        saveState(); renderCategories(); renderLinks();
+      }
+    }
+
+    function deleteCategory(catId){
+      // remove category and clear links or move them to Uncategorized (null)
+      state.categories = state.categories.filter(c=>c.id!==catId);
+      state.links.forEach(l=>{
+        if(l.categoryId === catId){
+          l.categoryId = '';
+          l.subcategoryId = '';
         }
+      });
+      saveState(); renderCategories(); renderLinks();
+    }
 
-        // Factory function to create a simple beep sound
-        function createBeep(frequency, duration, volume) {
-            return function() {
-                if (!audioContext) return; // Exit if audio not initialized
-                
-                // Create oscillator (sound generator) and gain (volume control)
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                // Connect audio nodes: oscillator -> gain -> speakers
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                // Set up the beep sound
-                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-                oscillator.type = 'sine'; // Smooth sine wave sound
-                
-                // Create fade in/out envelope to avoid audio "clicks"
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);                           // Start silent
-                gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);     // Fade in quickly
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration); // Fade out
-                
-                // Play the sound for the specified duration
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + duration);
-            };
+    function addSubcategory(catId, name){
+      if(!name || !name.trim()) return;
+      const cat = state.categories.find(c=>c.id===catId);
+      if(!cat) return;
+      cat.subcategories.push({id:uid('sub'), name: name.trim()});
+      saveState(); renderCategories(); renderLinks();
+    }
+
+    function deleteSubcategory(catId, subId){
+      const cat = state.categories.find(c=>c.id===catId);
+      if(!cat) return;
+      cat.subcategories = cat.subcategories.filter(s=>s.id!==subId);
+      state.links.forEach(l=>{
+        if(l.subcategoryId === subId) l.subcategoryId = '';
+      });
+      saveState(); renderCategories(); renderLinks();
+    }
+
+    function addOrUpdateLink(){
+      const title = titleInput.value.trim();
+      const url = urlInput.value.trim();
+      if(!title || !url) { alert('Title and URL are required'); return; }
+
+      const description = descInput.value.trim();
+      const categoryId = linkCategory.value || '';
+      const subcategoryId = linkSubcategory.value || '';
+      const tags = tagsInput.value.split(',').map(t=>t.trim()).filter(Boolean);
+
+      if(state.editing){
+        const l = state.links.find(x=>x.id===state.editing);
+        if(l){
+          l.title = title; l.url = url; l.description = description;
+          l.categoryId = categoryId; l.subcategoryId = subcategoryId; l.tags = tags;
+          state.editing = null;
+          saveState();
+          clearForm();
+          renderLinks(searchInput.value);
         }
+        saveState();
+      } else {
+        const newLink = { id: uid('link'), title, url, description, categoryId, subcategoryId, tags };
+        state.links.push(newLink);
+        saveState();
+        clearForm();
+        renderLinks(searchInput.value);
+      }
+    }
 
-        // Create a two-tone whistle sound for exercise start/end
-        function createWhistle() {
-            return function() {
-                if (!audioContext) return; // Exit if audio not initialized
-                
-                // Create two oscillators for the two-tone effect
-                const oscillator1 = audioContext.createOscillator();
-                const oscillator2 = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                // Connect both oscillators to the same gain node
-                oscillator1.connect(gainNode);
-                oscillator2.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                // Set up the frequency sweep for whistle effect
-                // Oscillator 1: 1000Hz -> 1200Hz
-                oscillator1.frequency.setValueAtTime(1000, audioContext.currentTime);
-                oscillator1.frequency.setValueAtTime(1200, audioContext.currentTime + 0.1);
-                
-                // Oscillator 2: 1200Hz -> 1000Hz (opposite direction)
-                oscillator2.frequency.setValueAtTime(1200, audioContext.currentTime);
-                oscillator2.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
-                
-                oscillator1.type = 'sine';
-                oscillator2.type = 'sine';
-                
-                // Create the whistle envelope (longer than the beep)
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.01);    // Fade in
-                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.15);    // Hold
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3); // Fade out
-                
-                // Play both oscillators for 0.3 seconds
-                oscillator1.start(audioContext.currentTime);
-                oscillator1.stop(audioContext.currentTime + 0.3);
-                oscillator2.start(audioContext.currentTime);
-                oscillator2.stop(audioContext.currentTime + 0.3);
-            };
+    function editLink(id){
+      const l = state.links.find(x=>x.id===id);
+      if(!l) return;
+      state.editing = id;
+      titleInput.value = l.title;
+      urlInput.value = l.url;
+      descInput.value = l.description || '';
+      tagsInput.value = (l.tags || []).join(', ');
+      // set category & subcategory; ensure options exist
+      if(l.categoryId){
+        linkCategory.value = l.categoryId;
+      }
+      syncSubcategoriesList();
+      linkSubcategory.value = l.subcategoryId || '';
+      saveLinkBtn.textContent = 'Save Changes';
+    }
+
+    function deleteLink(id){
+      if(!confirm('Delete this link?')) return;
+      state.links = state.links.filter(l=>l.id!==id);
+      saveState(); renderLinks(searchInput.value);
+    }
+
+    function moveLink(id, direction){
+      const idx = state.links.findIndex(l=>l.id===id);
+      if(idx === -1) return;
+      const newIndex = direction === 'up' ? Math.max(0, idx-1) : Math.min(state.links.length-1, idx+1);
+      if(newIndex === idx) return;
+      const tmp = state.links[idx];
+      state.links.splice(idx,1);
+      state.links.splice(newIndex,0,tmp);
+      saveState(); renderLinks(searchInput.value);
+    }
+
+    function clearForm(){
+      state.editing = null;
+      titleInput.value = urlInput.value = descInput.value = tagsInput.value = '';
+      linkCategory.selectedIndex = 0;
+      syncSubcategoriesList();
+      saveLinkBtn.textContent = 'Add Link';
+    }
+
+    // Import/export
+    function exportJSON(){
+      const payload = JSON.stringify(state, null, 2);
+      downloadFile('links.json', payload, 'application/json');
+    }
+
+    function importJSONFile(file){
+      const reader = new FileReader();
+      reader.onload = e=>{
+        try{
+          const parsed = JSON.parse(e.target.result);
+          applyImported(parsed);
+        }catch(err){
+          alert('Invalid JSON file.');
         }
+      };
+      reader.readAsText(file);
+    }
 
-        // ==============================================
-        // TIMER LOGIC - Main countdown function
-        // ==============================================
-        
-        // This function is called every second when the timer is running
-        function tick() {
-            timeLeft--; // Decrease time by 1 second
-            updateDisplay(); // Update the screen
+    function applyImported(parsed){
+      // Accept both {categories:[], links:[]} or a raw array of links
+      if(Array.isArray(parsed)){
+        // assume array of links
+        state.links = parsed.map(normalizeLinkForImport);
+        // keep categories as-is
+      } else if(parsed && typeof parsed === 'object'){
+        if(parsed.categories) state.categories = parsed.categories.map(c=>{
+          // ensure id and structure
+          return { id: c.id || uid('cat'), name: c.name || 'Unnamed', subcategories: (c.subcategories||[]).map(s=>({id:s.id||uid('sub'), name:s.name||'Unnamed'})) };
+        });
+        if(parsed.links) state.links = parsed.links.map(normalizeLinkForImport);
+      } else {
+        alert('Unrecognized import format.');
+        return;
+      }
+      saveState(); renderCategories(); renderLinks();
+    }
 
-            // Play tick sound during workout phase only (not during rest)
-            if (isWorkout && workoutStarted && timeLeft > 0) {
-                tickSound(); // Beep sound for each second
-            }
+    function normalizeLinkForImport(raw){
+      // Accept flexible keys
+      return {
+        id: raw.id || uid('link'),
+        title: raw.title || raw.name || 'Untitled',
+        url: raw.url || raw.href || '',
+        description: raw.description || raw.desc || '',
+        categoryId: raw.categoryId || raw.category || '',
+        subcategoryId: raw.subcategoryId || raw.subcategory || '',
+        tags: raw.tags || (raw.tagsString ? raw.tagsString.split(',').map(t=>t.trim()) : [])
+      };
+    }
 
-            // Check if current phase (workout or rest) is complete
-            if (timeLeft <= 0) {
-                if (isWorkout) {
-                    // End of 30-second workout period
-                    whistleSound(); // Play whistle to signal end of exercise
-                    
-                    // Switch to 10-second rest period
-                    isWorkout = false;
-                    timeLeft = 10;
-                } else {
-                    // End of 10-second rest period
-                    currentExercise++; // Move to next exercise
-                    
-                    // Check if we've completed all exercises
-                    if (currentExercise >= exercises.length) {
-                        completeWorkout(); // End the entire workout
-                        return;
-                    }
-                    
-                    // Start next exercise
-                    whistleSound(); // Play whistle to signal start of new exercise
-                    isWorkout = true; // Switch back to workout phase
-                    timeLeft = 30;    // Reset to 30 seconds
-                    nextExercise.textContent = ""; // Clear "Next:" text
-                }
-            }
+    function generateStandaloneHTML(){
+      // Create a clean, standalone HTML for export
+      // Minimal inline CSS to look polished
+      const css = `
+      body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial; background:#f7fafc; color:#0f1724; padding:28px;}
+      .container{max-width:900px;margin:0 auto;}
+      h1{font-size:22px;margin-bottom:4px}
+      h2{margin-top:14px;margin-bottom:6px;color:#334155}
+      h3{margin:0 0 6px;color:#475569}
+      a{color:#0ea5a4;text-decoration:none;font-weight:600}
+      .desc{color:#64748b;margin-top:4px;margin-bottom:8px}
+      ul{padding-left:0;list-style:none}
+      li{padding:10px;border-radius:8px;background:#ffffff;margin-bottom:8px;border:1px solid #e6eef6}
+      .meta{display:flex;justify-content:space-between;align-items:center}
+      .small{font-size:13px;color:#64748b}
+      `;
+
+      // Group by category / subcategory (same as preview)
+      const groups = {};
+      state.links.forEach(link=>{
+        const cat = state.categories.find(c=>c.id===link.categoryId);
+        const catName = (cat && cat.name) || 'Uncategorized';
+        const sub = cat && cat.subcategories.find(s=>s.id===link.subcategoryId);
+        const subName = (sub && sub.name) || null;
+
+        groups[catName] = groups[catName] || {};
+        const key = subName || '_none';
+        groups[catName][key] = groups[catName][key] || [];
+        groups[catName][key].push(link);
+      });
+
+      let content = `<div class="container"><h1>Your Link Directory</h1>\n`;
+      for(const [catName, subs] of Object.entries(groups)){
+        content += `<section>\n  <h2>${escapeHtml(catName)}</h2>\n`;
+        for(const [subName, links] of Object.entries(subs)){
+          if(subName !== '_none'){
+            content += `  <h3>${escapeHtml(subName)}</h3>\n`;
+          }
+          content += `  <ul>\n`;
+          links.forEach(l=>{
+            content += `    <li><div class="meta"><a href="${escapeHtmlAttr(l.url)}">${escapeHtml(l.title)}</a><div class="small">${(l.tags||[]).join(', ')}</div></div>\n`;
+            if(l.description) content += `      <div class="desc">${escapeHtml(l.description)}</div>\n`;
+            content += `    </li>\n`;
+          });
+          content += `  </ul>\n`;
         }
+        content += `</section>\n`;
+      }
+      content += `</div>`;
 
-        // ==============================================
-        // CONTROL FUNCTIONS - Start, Pause, Reset
-        // ==============================================
-        
-        // Start or restart the workout
-        function startWorkout() {
-            // Initialize audio on first user interaction (required by browsers)
-            initAudio();
-            
-            // If this is the first time starting, set up initial state
-            if (!workoutStarted) {
-                workoutStarted = true;
-                currentExercise = 0;  // Start with first exercise
-                timeLeft = 30;        // 30 seconds for first exercise
-                isWorkout = true;     // Start in workout phase
-                
-                // Play starting whistle after a short delay
-                setTimeout(() => whistleSound(), 100);
-            }
-            
-            // Start the timer
-            isRunning = true;
-            isPaused = false;
-            timer = setInterval(tick, 1000); // Call tick() every 1000ms (1 second)
-            
-            // Update button visibility
-            startBtn.style.display = 'none';         // Hide start button
-            pauseBtn.style.display = 'inline-block'; // Show pause button
-            pauseBtn.textContent = 'Pause';
-            
-            updateDisplay(); // Refresh the screen
+      return `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8"/>\n<meta name="viewport" content="width=device-width,initial-scale=1"/>\n<title>Link Directory</title>\n<style>${css}</style>\n</head>\n<body>\n${content}\n</body>\n</html>`;
+    }
+
+    // Safety helpers for HTML injection escape
+    function escapeHtml(str){
+      if(!str && str !== 0) return '';
+      return String(str)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+    }
+    function escapeHtmlAttr(str){
+      if(!str && str !== 0) return '';
+      return String(str)
+        .replace(/&/g,'&amp;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;');
+    }
+
+    function downloadFile(filename, content, mime='text/plain'){
+      const blob = new Blob([content], {type: mime});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 300);
+    }
+
+    // Event wiring
+    addCategoryBtn.addEventListener('click', ()=>{ addCategory(newCategoryInput.value); newCategoryInput.value=''; });
+    addSubcategoryBtn.addEventListener('click', ()=>{ addSubcategory(categoryForSub.value || (state.categories[0] && state.categories[0].id), newSubcategoryInput.value); newSubcategoryInput.value=''; });
+
+    categoriesListEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      if(action === 'select'){
+        const cat = state.categories.find(c=>c.id===id);
+        const newName = prompt('Rename category', cat.name);
+        if(newName) renameCategory(id,newName);
+      } else if(action === 'delete'){
+        if(confirm('Delete this category? Links in it will become uncategorized.')) deleteCategory(id);
+      }
+    });
+
+    subcategoriesListEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      const catId = btn.dataset.cat;
+      if(action === 'edit-sub'){
+        const cat = state.categories.find(c=>c.id===catId);
+        const sub = cat && cat.subcategories.find(s=>s.id===id);
+        const newName = prompt('Rename subcategory', sub.name);
+        if(newName){
+          sub.name = newName.trim();
+          saveState(); renderCategories(); renderLinks();
         }
+      } else if(action === 'del-sub'){
+        if(confirm('Delete this subcategory? Links in it will lose the subcategory.')) deleteSubcategory(catId, id);
+      }
+    });
 
-        // Pause or resume the workout
-        function togglePause() {
-            if (isPaused) {
-                // Currently paused, so resume
-                timer = setInterval(tick, 1000); // Restart the timer
-                isPaused = false;
-                pauseBtn.textContent = 'Pause';
-            } else {
-                // Currently running, so pause
-                clearInterval(timer); // Stop the timer
-                isPaused = true;
-                pauseBtn.textContent = 'Resume';
-            }
-        }
+    saveLinkBtn.addEventListener('click', addOrUpdateLink);
+    clearFormBtn.addEventListener('click', (e)=>{ e.preventDefault(); clearForm(); });
 
-        // Reset everything back to the beginning
-        function resetWorkout() {
-            // Stop the timer
-            clearInterval(timer);
-            
-            // Reset all state variables to initial values
-            currentExercise = 0;
-            timeLeft = 30;
-            isWorkout = true;
-            isRunning = false;
-            isPaused = false;
-            workoutStarted = false;
-            
-            // Reset button visibility
-            startBtn.style.display = 'inline-block';  // Show start button
-            pauseBtn.style.display = 'none';          // Hide pause button
-            
-            // Reset display text
-            exerciseDisplay.textContent = "Press Start to Begin";
-            nextExercise.textContent = "";
-            progressText.textContent = "Exercise 0 of 12";
-            progressFill.style.width = '0%'; // Empty progress bar
-            
-            updateDisplay(); // Refresh the screen
-        }
+    linksListEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      if(action === 'edit') editLink(id);
+      if(action === 'delete') deleteLink(id);
+      if(action === 'move-up') moveLink(id, 'up');
+      if(action === 'move-down') moveLink(id, 'down');
+    });
 
-        // Called when all exercises are finished
-        function completeWorkout() {
-            clearInterval(timer); // Stop the timer
-            isRunning = false;
-            
-            // Reset buttons for potential restart
-            startBtn.style.display = 'inline-block';
-            pauseBtn.style.display = 'none';
-            startBtn.textContent = 'Start Again'; // Change text to indicate restart
-            
-            updateDisplay(); // Show completion message
-        }
+    categoryForSub.addEventListener('change', ()=>{ syncSubcategoriesList(); });
 
-        // ==============================================
-        // INITIALIZATION
-        // ==============================================
-        
-        // Set up the initial display when the page loads
-        updateDisplay();
-    </script>
+    linkCategory.addEventListener('change', ()=>{ syncSubcategoriesList(); });
+
+    exportJsonBtn.addEventListener('click', ()=>{ exportJSON(); });
+    exportHtmlBtn.addEventListener('click', ()=>{ const html = generateStandaloneHTML(); downloadFile('link-directory.html', html, 'text/html'); });
+
+    importJsonBtn.addEventListener('click', ()=> importFileClick() );
+    importFileInput.addEventListener('change', (e)=>{ const f = e.target.files[0]; if(f) importJSONFile(f); importFileInput.value=''; });
+
+    function importFileClick(){ importFileInput.click(); }
+
+    applyPasteBtn.addEventListener('click', ()=>{
+      try{
+        const parsed = JSON.parse(pasteImport.value);
+        applyImported(parsed);
+        pasteImport.value='';
+      }catch(e){
+        alert('Invalid JSON pasted.');
+      }
+    });
+
+    clearStorageBtn.addEventListener('click', ()=>{
+      if(confirm('Reset everything? This will clear local storage.')){ localStorage.removeItem(STORAGE_KEY); loadState(); renderCategories(); renderLinks(); }
+    });
+
+    previewHtmlBtn.addEventListener('click', ()=>{
+      const html = generateStandaloneHTML();
+      const w = window.open('', '_blank');
+      w.document.write(html);
+      w.document.close();
+    });
+
+    searchInput.addEventListener('input', ()=> renderLinks(searchInput.value.trim()));
+
+    // keyboard: Enter on URL or title while in form to save
+    [titleInput, urlInput].forEach(inp=>{
+      inp.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') { e.preventDefault(); addOrUpdateLink(); }});
+    });
+
+    // Initialize
+    loadState();
+    renderCategories();
+    renderLinks();
+
+    // Expose a little helper for debugging in console
+    window.LINK_DIR_STATE = state;
+  </script>
 </body>
 </html>
