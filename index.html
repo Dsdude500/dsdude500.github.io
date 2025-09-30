@@ -382,7 +382,13 @@
         placeholder.textContent = '-- no category --';
         linkCategory.appendChild(placeholder);
       }
-      // keep selection triggered for other UI sync
+
+      // Ensure selects have a sensible default selection
+      if(!categoryForSub.value && categoryForSub.options.length) categoryForSub.selectedIndex = 0;
+      if(!linkCategory.value && linkCategory.options.length) linkCategory.selectedIndex = 0;
+
+      // update both lists
+      renderSubcategoriesForCategory(categoryForSub.value || (state.categories[0] && state.categories[0].id));
       syncSubcategoriesList();
     }
 
@@ -413,12 +419,11 @@
       }
     }
 
+    // ===== FIXED: decoupled sync function =====
     function syncSubcategoriesList(){
-      // update right-hand selects for link editor and subcategory add target
-      const selectedCatId = categoryForSub.value || (linkCategory.value || '');
-      // for link editor linkSubcategory options:
+      // For the link form dropdown, follow the linkCategory select ONLY
       linkSubcategory.innerHTML = '';
-      const cat = state.categories.find(c=>c.id === selectedCatId) || state.categories[0] || null;
+      const cat = state.categories.find(c=>c.id === linkCategory.value);
       if(cat){
         const emptyOpt = document.createElement('option');
         emptyOpt.value = '';
@@ -437,11 +442,11 @@
         linkSubcategory.appendChild(opt);
       }
 
-      // Render the left subcategories list for the category selected in the "add subcategory" select
+      // For left-hand subcategory list, render using the categoryForSub select only
       renderSubcategoriesForCategory(categoryForSub.value || (state.categories[0] && state.categories[0].id));
     }
 
-    function renderLinks(filterText=''){
+    function renderLinks(filterText=''){ 
       linksListEl.innerHTML = '';
       const list = state.links
         .filter(l=>{
@@ -613,6 +618,8 @@
       // set category & subcategory; ensure options exist
       if(l.categoryId){
         linkCategory.value = l.categoryId;
+      } else if(linkCategory.options.length) {
+        linkCategory.selectedIndex = 0;
       }
       syncSubcategoriesList();
       linkSubcategory.value = l.subcategoryId || '';
@@ -639,7 +646,7 @@
     function clearForm(){
       state.editing = null;
       titleInput.value = urlInput.value = descInput.value = tagsInput.value = '';
-      linkCategory.selectedIndex = 0;
+      if(linkCategory.options.length) linkCategory.selectedIndex = 0;
       syncSubcategoriesList();
       saveLinkBtn.textContent = 'Add Link';
     }
@@ -711,6 +718,12 @@
       .meta{display:flex;justify-content:space-between;align-items:center}
       .small{font-size:13px;color:#64748b}
       `;
+
+      // If there are no links, include a helpful placeholder so exported HTML isn't empty
+      if(!state.links || state.links.length === 0){
+        const placeholder = `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8"/>\n<meta name="viewport" content="width=device-width,initial-scale=1"/>\n<title>Link Directory</title>\n<style>${css}</style>\n</head>\n<body>\n<div class="container">\n  <h1>Your Link Directory</h1>\n  <p class="small">No links were present when this file was exported. Add links in the builder and export again to populate this directory.</p>\n</div>\n</body>\n</html>`;
+        return placeholder;
+      }
 
       // Group by category / subcategory (same as preview)
       const groups = {};
@@ -830,7 +843,8 @@
       if(action === 'move-down') moveLink(id, 'down');
     });
 
-    categoryForSub.addEventListener('change', ()=>{ syncSubcategoriesList(); });
+    // Updated handlers: left-hand select updates left list only; right-hand select updates link subcategory only
+    categoryForSub.addEventListener('change', ()=>{ renderSubcategoriesForCategory(categoryForSub.value); });
 
     linkCategory.addEventListener('change', ()=>{ syncSubcategoriesList(); });
 
