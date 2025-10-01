@@ -23,95 +23,888 @@
       background:linear-gradient(180deg,#071022 0%, #07182b 100%);
       color:#e6eef6;
       padding:28px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
-    .app{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:420px 1fr;gap:20px;align-items:start}
-    header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+
+    .app {
+      max-width:1100px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    header{
+      grid-column:1/-1;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:6px;
+    }
     header h1{margin:0;font-size:20px}
     header p{margin:0;color:var(--muted);font-size:13px}
-    .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:var(--radius);padding:16px;box-shadow:0 6px 18px rgba(3,8,20,0.6),inset 0 1px 0 rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow: 0 6px 18px rgba(3,8,20,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .left .panel + .panel { margin-top:12px; }
+
     label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-    input[type="text"],input[type="url"],textarea,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;font-size:14px;outline:none}
-    textarea{min-height:72px;resize:vertical}
-    .row{display:flex;gap:10px}.row>*{flex:1}
-    button{background:linear-gradient(180deg,var(--accent),#39d6a6);border:0;color:#042016;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600;box-shadow:0 6px 16px rgba(54,187,136,0.12)}
-    .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);box-shadow:none}
-    .btn-danger{background:linear-gradient(180deg,var(--danger),#ff4b4b);color:#fff}
+    input[type="text"], input[type="url"], textarea, select {
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.04);
+      background:var(--glass);
+      color:inherit;
+      font-size:14px;
+      outline:none;
+    }
+    textarea{min-height:72px; resize:vertical}
+
+    .row{display:flex; gap:10px}
+    .row > *{flex:1}
+
+    button{
+      background:linear-gradient(180deg,var(--accent), #39d6a6);
+      border:0;
+      color:#042016;
+      padding:10px 12px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow: 0 6px 16px rgba(54,187,136,0.12);
+    }
+    .btn-ghost{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.04);
+      box-shadow:none;
+    }
+    .btn-danger{background:linear-gradient(180deg,var(--danger), #ff4b4b); color:#fff}
+
     .small{font-size:12px;padding:8px 10px;border-radius:8px}
     .muted{color:var(--muted);font-size:13px}
-    .list{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto;padding-right:6px}
-    .item{display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02)}
+
+    .list {
+      margin-top:12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      max-height:60vh;
+      overflow:auto;
+      padding-right:6px;
+    }
+
+    .item{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      border:1px solid rgba(255,255,255,0.02);
+    }
     .item .meta{flex:1}
     .item h4{margin:0;font-size:14px}
     .item p{margin:4px 0 0;color:var(--muted);font-size:13px}
     .item .controls{display:flex;gap:8px}
-    .category-pill{display:inline-block;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:12px;color:var(--muted);margin-right:6px}
-    .preview{padding:18px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(255,255,255,0.01));min-height:240px;overflow:auto}
-    .export-preview{background:#020617;color:#dbeefd;font-family:ui-monospace,monospace;padding:12px;border-radius:8px;max-height:40vh;overflow:auto;font-size:13px}
-    footer{grid-column:1/-1;margin-top:12px;display:flex;justify-content:center;gap:8px;color:var(--muted);font-size:13px}
-    @media(max-width:980px){.app{grid-template-columns:1fr;padding-bottom:40px}header{flex-direction:column;align-items:flex-start;gap:8px}}
+
+    .category-pill{
+      display:inline-block;
+      padding:6px 8px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.03);
+      font-size:12px;
+      color:var(--muted);
+      margin-right:6px;
+      text-decoration:none;
+    }
+
+    .top-actions{display:flex; gap:8px; align-items:center}
+
+    .preview{
+      padding:18px;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      min-height:240px;
+      overflow:auto;
+    }
+
+    .export-preview{
+      background:#020617;
+      color:#dbeefd;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      padding:12px;border-radius:8px;
+      max-height:40vh; overflow:auto; font-size:13px;
+    }
+
+    .search {
+      display:flex;
+      gap:8px;
+      margin-bottom:10px;
+      align-items:center;
+    }
+
+    .flex-between{display:flex;justify-content:space-between;align-items:center}
+
+    footer{grid-column:1/-1; margin-top:12px; display:flex; justify-content:center; gap:8px; color:var(--muted); font-size:13px}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .app{grid-template-columns: 1fr; padding-bottom:40px}
+      header{flex-direction:column; align-items: flex-start; gap:8px}
+    }
   </style>
 </head>
 <body>
-  <div class="app">
-    <!-- left column omitted for brevity -->
+  <div class="app" role="application" aria-label="Link directory builder">
+    <header>
+      <div>
+        <h1>Link Directory Builder</h1>
+        <p class="muted">Create, import, export or preview a polished HTML link directory — categories & subcategories included.</p>
+      </div>
+      <div class="top-actions">
+        <button id="export-html-btn">Export HTML</button>
+        <button id="export-json-btn" class="btn-ghost">Export JSON</button>
+        <button id="import-json-btn" class="btn-ghost small">Import JSON</button>
+        <input id="import-file" type="file" accept="application/json" style="display:none" />
+      </div>
+    </header>
 
-    <div>
+    <!-- Left column: management -->
+    <div class="left">
       <div class="panel">
-        <h3 style="margin:0">Add / Edit Link</h3>
-        <label>Title</label>
-        <input id="link-title" type="text" placeholder="Example: MDN Web Docs" />
-        <label style="margin-top:10px">URL</label>
-        <input id="link-url" type="url" placeholder="https://..." />
-        <div class="row" style="margin-top:10px">
-          <div><label>Category</label><select id="link-category"></select></div>
-          <div><label>Subcategory</label><select id="link-subcategory"></select></div>
+        <h3 style="margin-top:0">Categories</h3>
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+          <input id="new-category" type="text" placeholder="New category (e.g. Tools)" />
+          <button id="add-category" class="small">Add</button>
         </div>
-        <label style="margin-top:10px">Description</label>
-        <textarea id="link-desc" placeholder="Short blurb that will show beneath the link"></textarea>
-        <label style="margin-top:10px">Subreddit (optional)</label>
-        <input id="link-subreddit" type="text" placeholder="e.g. r/webdev or full URL" />
-        <label style="margin-top:10px">Tags (comma separated)</label>
-        <input id="link-tags" type="text" placeholder="tag1, tag2" />
-        <div style="display:flex; gap:8px; margin-top:12px">
-          <button id="save-link">Add Link</button>
-          <button id="clear-form" class="btn-ghost">Clear</button>
-          <button id="preview-html" class="btn-ghost">Preview Generated HTML</button>
+
+        <div id="categories-list" class="list" aria-live="polite"></div>
+
+        <hr style="opacity:.06;border:none;height:1px;margin:12px 0;background:linear-gradient(90deg,transparent,#ffffff0d,transparent)">
+
+        <h3 style="margin-top:0">Subcategories (select category first)</h3>
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+          <select id="category-for-sub" aria-label="Choose category for new subcategory"></select>
+          <input id="new-subcategory" type="text" placeholder="New subcategory (e.g. Productivity)" />
+          <button id="add-subcategory" class="small">Add</button>
+        </div>
+
+        <div id="subcategories-list" class="list muted"></div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <h3 style="margin-top:0">Quick import (paste JSON)</h3>
+        <textarea id="paste-import" placeholder='Paste JSON array or {categories, links} and click "Apply"'></textarea>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button id="apply-paste" class="small">Apply</button>
+          <button id="clear-storage" class="btn-ghost small">Reset</button>
         </div>
       </div>
-      <!-- links + preview panels go here -->
     </div>
+
+    <!-- Right column: link editor + preview -->
+    <div>
+      <div class="panel">
+        <div class="flex-between">
+          <h3 style="margin:0">Add / Edit Link</h3>
+          <div class="muted">Tip: you can import/export JSON or export a standalone HTML file</div>
+        </div>
+
+        <div style="margin-top:12px;">
+          <label>Title</label>
+          <input id="link-title" type="text" placeholder="Example: MDN Web Docs" />
+
+          <label style="margin-top:10px">URL</label>
+          <input id="link-url" type="url" placeholder="https://..." />
+
+          <div class="row" style="margin-top:10px">
+            <div>
+              <label>Category</label>
+              <select id="link-category"></select>
+            </div>
+            <div>
+              <label>Subcategory</label>
+              <select id="link-subcategory"></select>
+            </div>
+          </div>
+
+          <label style="margin-top:10px">Description</label>
+          <textarea id="link-desc" placeholder="Short blurb that will show beneath the link"></textarea>
+
+          <label style="margin-top:10px">Subreddit (optional)</label>
+          <input id="link-subreddit" type="text" placeholder="e.g. webdev, r/webdev, or full reddit URL" />
+
+          <label style="margin-top:10px">Tags (comma separated)</label>
+          <input id="link-tags" type="text" placeholder="tag1, tag2" />
+
+          <div style="display:flex; gap:8px; margin-top:12px">
+            <button id="save-link">Add Link</button>
+            <button id="clear-form" class="btn-ghost">Clear</button>
+            <button id="preview-html" class="btn-ghost">Preview Generated HTML</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <div class="flex-between">
+          <h3 style="margin:0">Links</h3>
+          <div>
+            <input id="search" type="text" placeholder="Search title, description or tags" style="padding:8px;border-radius:8px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);color:inherit" />
+          </div>
+        </div>
+
+        <div id="links-list" class="list" style="margin-top:10px"></div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <h3 style="margin-top:0">Preview / Export</h3>
+        <div class="muted" style="margin-bottom:8px">Preview shows how your exported HTML will be grouped by category & subcategory.</div>
+        <div id="preview" class="preview"></div>
+
+        <div style="margin-top:10px">
+          <label class="muted">Export preview (generated HTML)</label>
+          <pre id="export-output" class="export-preview" readonly></pre>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div>Built with ❤️ — open the generated HTML anywhere to share your directory.</div>
+    </footer>
   </div>
 
   <script>
-    // Helper to normalize subreddit input
-    function normalizeSubreddit(input) {
-      if (!input) return '';
-      const trimmed = input.trim();
-      if (/^https?:\/\/(www\.)?reddit\.com\//i.test(trimmed)) return trimmed;
-      if (/^r\//i.test(trimmed)) return `https://reddit.com/${trimmed}`;
-      return `https://reddit.com/r/${trimmed}`;
-    }
-    function displaySubredditLabel(url){
-      return url.replace(/^https?:\/\/(www\.)?reddit\.com\//i,'');
+    // Storage key
+    const STORAGE_KEY = 'link_directory_v1';
+
+    // DOM refs
+    const categoriesListEl = document.getElementById('categories-list');
+    const categoryForSub = document.getElementById('category-for-sub');
+    const subcategoriesListEl = document.getElementById('subcategories-list');
+    const linkCategory = document.getElementById('link-category');
+    const linkSubcategory = document.getElementById('link-subcategory');
+    const linksListEl = document.getElementById('links-list');
+    const previewEl = document.getElementById('preview');
+    const exportOutputEl = document.getElementById('export-output');
+
+    const newCategoryInput = document.getElementById('new-category');
+    const addCategoryBtn = document.getElementById('add-category');
+    const addSubcategoryBtn = document.getElementById('add-subcategory');
+    const newSubcategoryInput = document.getElementById('new-subcategory');
+
+    const titleInput = document.getElementById('link-title');
+    const urlInput = document.getElementById('link-url');
+    const descInput = document.getElementById('link-desc');
+    const subredditInput = document.getElementById('link-subreddit');
+    const tagsInput = document.getElementById('link-tags');
+    const saveLinkBtn = document.getElementById('save-link');
+    const clearFormBtn = document.getElementById('clear-form');
+
+    const exportHtmlBtn = document.getElementById('export-html-btn');
+    const exportJsonBtn = document.getElementById('export-json-btn');
+    const importJsonBtn = document.getElementById('import-json-btn');
+    const importFileInput = document.getElementById('import-file');
+    const applyPasteBtn = document.getElementById('apply-paste');
+    const pasteImport = document.getElementById('paste-import');
+    const clearStorageBtn = document.getElementById('clear-storage');
+    const previewHtmlBtn = document.getElementById('preview-html');
+    const searchInput = document.getElementById('search');
+
+    // In-memory state
+    let state = {
+      categories: [], // [{id, name, subcategories:[{id,name}] }]
+      links: [],      // [{id,title,url,description,subreddit,categoryId,subcategoryId,tags:[]}]
+      editing: null
+    };
+
+    // Helpers
+    const uid = (prefix='id') => prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        try{ state = JSON.parse(raw); } catch(e){ console.error('parse error',e); }
+      } else {
+        // initial seed
+        state.categories = [{id:uid('cat'), name:'General', subcategories:[] }];
+        state.links = [];
+        saveState();
+      }
     }
 
-    // Example parts from addOrUpdateLink
+    // HTML-escape helpers
+    function escapeHtml(str){
+      if(!str && str !== 0) return '';
+      return String(str)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+    }
+    function escapeHtmlAttr(str){
+      if(!str && str !== 0) return '';
+      return String(str)
+        .replace(/&/g,'&amp;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;');
+    }
+
+    // Subreddit normalization:
+    // - full reddit URL -> keep
+    // - 'reddit.com/...' -> add https://
+    // - 'r/webdev' -> https://reddit.com/r/webdev
+    // - 'webdev' -> https://reddit.com/r/webdev
+    function normalizeSubreddit(input){
+      if(!input) return '';
+      const s = input.trim();
+      if(/^https?:\/\/(www\.)?reddit\.com\//i.test(s)) return s;
+      if(/^reddit\.com\//i.test(s)) return 'https://' + s;
+      if(/^\/?r\//i.test(s)) {
+        // accept '/r/webdev' or 'r/webdev'
+        const sanitized = s.replace(/^\//,'');
+        return `https://reddit.com/${sanitized}`;
+      }
+      // bare name
+      return `https://reddit.com/r/${s}`;
+    }
+
+    // Convert stored subreddit (full url) into user-facing input string like 'r/webdev' or 'r/webdev/comments/...'
+    function subredditDisplayForInput(fullUrl){
+      if(!fullUrl) return '';
+      const m = fullUrl.match(/^https?:\/\/(?:www\.)?reddit\.com\/(.*)$/i);
+      return m ? m[1] : fullUrl;
+    }
+
+    // Rendering categories / subcategories
+    function renderCategories(){
+      categoriesListEl.innerHTML = '';
+      categoryForSub.innerHTML = '';
+      linkCategory.innerHTML = '';
+
+      state.categories.forEach(cat=>{
+        // left category item
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="meta">
+            <h4>${escapeHtml(cat.name)}</h4>
+            <p class="muted">${cat.subcategories.length} subcategory(s)</p>
+          </div>
+          <div class="controls">
+            <button class="btn-ghost small" data-action="select" data-id="${cat.id}">Rename</button>
+            <button class="btn-ghost small" data-action="delete" data-id="${cat.id}">Delete</button>
+          </div>
+        `;
+        categoriesListEl.appendChild(div);
+
+        // options for category selectors
+        const optLeft = document.createElement('option');
+        optLeft.value = cat.id;
+        optLeft.textContent = cat.name;
+        categoryForSub.appendChild(optLeft);
+
+        const optRight = optLeft.cloneNode(true);
+        linkCategory.appendChild(optRight);
+      });
+
+      // ensure at least a placeholder exists
+      if(linkCategory.options.length === 0){
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = '-- no category --';
+        linkCategory.appendChild(placeholder);
+      }
+      // sync subcategory lists based on current selections
+      syncSubcategoriesList();
+    }
+
+    function renderSubcategoriesForCategory(catId){
+      subcategoriesListEl.innerHTML = '';
+      const cat = state.categories.find(c=>c.id === catId) || state.categories[0];
+      if(!cat){
+        subcategoriesListEl.innerHTML = '<div class="muted">Select a category to see its subcategories</div>';
+        return;
+      }
+      cat.subcategories.forEach(sub=>{
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+          <div class="meta">
+            <h4>${escapeHtml(sub.name)}</h4>
+            <p class="muted">Subcategory of ${escapeHtml(cat.name)}</p>
+          </div>
+          <div class="controls">
+            <button class="btn-ghost small" data-action="edit-sub" data-id="${sub.id}" data-cat="${cat.id}">Rename</button>
+            <button class="btn-ghost small" data-action="del-sub" data-id="${sub.id}" data-cat="${cat.id}">Delete</button>
+          </div>
+        `;
+        subcategoriesListEl.appendChild(div);
+      });
+      if(cat.subcategories.length === 0){
+        subcategoriesListEl.innerHTML = '<div class="muted">No subcategories yet</div>';
+      }
+    }
+
+    // === IMPORTANT FIX: syncSubcategoriesList is decoupled ===
+    // Right-side link form subcategory follows linkCategory.
+    // Left-side subcategory list follows categoryForSub.
+    function syncSubcategoriesList(){
+      // fill link form subcategory based on linkCategory selection
+      linkSubcategory.innerHTML = '';
+      const catForLink = state.categories.find(c => c.id === linkCategory.value);
+      if(catForLink){
+        const emptyOpt = document.createElement('option');
+        emptyOpt.value = '';
+        emptyOpt.textContent = '-- none --';
+        linkSubcategory.appendChild(emptyOpt);
+        catForLink.subcategories.forEach(s=>{
+          const o = document.createElement('option');
+          o.value = s.id; o.textContent = s.name;
+          linkSubcategory.appendChild(o);
+        });
+      } else {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = '-- no subcategories --';
+        linkSubcategory.appendChild(opt);
+      }
+
+      // render left-side subcategory manager based on left selection
+      renderSubcategoriesForCategory(categoryForSub.value || (state.categories[0] && state.categories[0].id));
+    }
+
+    // Links rendering & preview
+    function renderLinks(filterText=''){
+      linksListEl.innerHTML = '';
+      const list = state.links
+        .filter(l=>{
+          if(!filterText) return true;
+          const q = filterText.toLowerCase();
+          return (l.title||'').toLowerCase().includes(q) ||
+                 (l.description||'').toLowerCase().includes(q) ||
+                 (l.tags||[]).join(',').toLowerCase().includes(q);
+        })
+        .sort((a,b)=> (a.title || '').localeCompare(b.title || ''));
+
+      list.forEach(link=>{
+        const cat = state.categories.find(c=>c.id===link.categoryId);
+        const sub = cat && cat.subcategories.find(s=>s.id===link.subcategoryId);
+        const div = document.createElement('div');
+        div.className = 'item';
+        // display subreddit text as trimmed path if present
+        const subredditText = link.subreddit ? (link.subreddit.replace(/^https?:\/\/(www\.)?reddit\.com\/?/i,'')) : '';
+        div.innerHTML = `
+          <div class="meta">
+            <h4><a href="${escapeHtmlAttr(link.url)}" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none">${escapeHtml(link.title)}</a></h4>
+            <p class="muted">${escapeHtml(link.description || '')}</p>
+            <div style="margin-top:6px">
+              ${cat ? `<span class="category-pill">${escapeHtml(cat.name)}</span>` : ''}
+              ${sub ? `<span class="category-pill">${escapeHtml(sub.name)}</span>` : ''}
+              ${link.subreddit ? `<a class="category-pill" href="${escapeHtmlAttr(link.subreddit)}" target="_blank" rel="noopener noreferrer">${escapeHtml(subredditText)}</a>` : ''}
+            </div>
+          </div>
+          <div class="controls">
+            <button class="btn-ghost small" data-action="edit" data-id="${link.id}">Edit</button>
+            <button class="btn-ghost small" data-action="move-up" data-id="${link.id}">▲</button>
+            <button class="btn-ghost small" data-action="move-down" data-id="${link.id}">▼</button>
+            <button class="btn-danger small" data-action="delete" data-id="${link.id}">Del</button>
+          </div>
+        `;
+        linksListEl.appendChild(div);
+      });
+
+      if(list.length===0){
+        linksListEl.innerHTML = '<div class="muted">No links yet</div>';
+      }
+
+      renderPreview();
+    }
+
+    function renderPreview(){
+      // Group links by category > subcategory
+      const groups = {};
+      state.links.forEach(link=>{
+        const cat = state.categories.find(c=>c.id===link.categoryId);
+        const catName = (cat && cat.name) || 'Uncategorized';
+        const sub = cat && cat.subcategories.find(s=>s.id===link.subcategoryId);
+        const subName = (sub && sub.name) || null;
+
+        groups[catName] = groups[catName] || {};
+        const key = subName || '_none';
+        groups[catName][key] = groups[catName][key] || [];
+        groups[catName][key].push(link);
+      });
+
+      let html = '';
+      for(const [catName, subs] of Object.entries(groups)){
+        html += `<section style="margin-bottom:18px"><h3 style="margin:0 0 8px">${escapeHtml(catName)}</h3>`;
+        for(const [subName, links] of Object.entries(subs)){
+          if(subName !== '_none'){
+            html += `<h4 style="margin:6px 0;color:var(--muted)">${escapeHtml(subName)}</h4>`;
+          }
+          html += `<ul style="list-style:none;padding:0;margin:6px 0 12px">`;
+          links.forEach(l=>{
+            const subredditText = l.subreddit ? l.subreddit.replace(/^https?:\/\/(www\.)?reddit\.com\/?/i,'') : '';
+            html += `<li style="margin-bottom:10px">
+              <a href="${escapeHtmlAttr(l.url)}" target="_blank" rel="noopener noreferrer" style="font-weight:600;color:var(--accent);text-decoration:none">${escapeHtml(l.title)}</a>
+              <div style="color:var(--muted);font-size:13px">${escapeHtml(l.description || '')}</div>
+              ${l.subreddit ? `<div style="margin-top:6px"><a href="${escapeHtmlAttr(l.subreddit)}" target="_blank" rel="noopener noreferrer" class="category-pill" style="text-decoration:none">${escapeHtml(subredditText)}</a></div>` : ''}
+            </li>`;
+          });
+          html += `</ul>`;
+        }
+        html += `</section>`;
+      }
+
+      previewEl.innerHTML = html || '<div class="muted">No preview available</div>';
+      exportOutputEl.textContent = generateStandaloneHTML();
+    }
+
+    // Actions for categories/subcategories
+    function addCategory(name){
+      if(!name || !name.trim()) return;
+      state.categories.push({id:uid('cat'), name: name.trim(), subcategories: []});
+      saveState(); renderCategories(); renderLinks(searchInput.value);
+    }
+
+    function renameCategory(catId, newName){
+      const cat = state.categories.find(c=>c.id===catId);
+      if(cat && newName && newName.trim()){
+        cat.name = newName.trim();
+        saveState(); renderCategories(); renderLinks();
+      }
+    }
+
+    function deleteCategory(catId){
+      if(!confirm('Delete category? Links in it will become uncategorized.')) return;
+      state.categories = state.categories.filter(c=>c.id!==catId);
+      state.links.forEach(l=>{
+        if(l.categoryId === catId){ l.categoryId = ''; l.subcategoryId = ''; }
+      });
+      saveState(); renderCategories(); renderLinks();
+    }
+
+    function addSubcategory(catId, name){
+      if(!name || !name.trim()) return;
+      const cat = state.categories.find(c=>c.id===catId);
+      if(!cat) return;
+      cat.subcategories.push({id:uid('sub'), name: name.trim()});
+      saveState(); renderCategories(); renderLinks();
+    }
+
+    function deleteSubcategory(catId, subId){
+      const cat = state.categories.find(c=>c.id===catId);
+      if(!cat) return;
+      cat.subcategories = cat.subcategories.filter(s=>s.id!==subId);
+      state.links.forEach(l=>{
+        if(l.subcategoryId === subId) l.subcategoryId = '';
+      });
+      saveState(); renderCategories(); renderLinks();
+    }
+
+    // Links actions
     function addOrUpdateLink(){
-      const subreddit = normalizeSubreddit(document.getElementById('link-subreddit').value);
-      // ... then store it in link object
+      const title = titleInput.value.trim();
+      const url = urlInput.value.trim();
+      if(!title || !url) { alert('Title and URL are required'); return; }
+      const description = descInput.value.trim();
+      // normalize subreddit to full URL if provided
+      const subredditNormalized = normalizeSubreddit(subredditInput.value);
+      const categoryId = linkCategory.value || '';
+      const subcategoryId = linkSubcategory.value || '';
+      const tags = tagsInput.value.split(',').map(t=>t.trim()).filter(Boolean);
+
+      if(state.editing){
+        const l = state.links.find(x=>x.id===state.editing);
+        if(l){
+          l.title = title; l.url = url; l.description = description;
+          l.subreddit = subredditNormalized;
+          l.categoryId = categoryId; l.subcategoryId = subcategoryId; l.tags = tags;
+          state.editing = null;
+          saveState();
+          clearForm();
+          renderLinks(searchInput.value);
+        }
+      } else {
+        const newLink = { id: uid('link'), title, url, description, subreddit: subredditNormalized, categoryId, subcategoryId, tags };
+        state.links.push(newLink);
+        saveState();
+        clearForm();
+        renderLinks(searchInput.value);
+      }
     }
 
-    function renderLinks(){
-      // inside loop:
-      // ${l.subreddit ? `<a href="${l.subreddit}" target="_blank" class="category-pill">${displaySubredditLabel(l.subreddit)}</a>` : ''}
+    function editLink(id){
+      const l = state.links.find(x=>x.id===id);
+      if(!l) return;
+      state.editing = id;
+      titleInput.value = l.title;
+      urlInput.value = l.url;
+      descInput.value = l.description || '';
+      // show user-friendly subreddit in the input (like 'r/webdev' or 'r/webdev/comments/...')
+      subredditInput.value = subredditDisplayForInput(l.subreddit || '');
+      tagsInput.value = (l.tags || []).join(', ');
+      if(l.categoryId) linkCategory.value = l.categoryId;
+      syncSubcategoriesList();
+      linkSubcategory.value = l.subcategoryId || '';
+      saveLinkBtn.textContent = 'Save Changes';
     }
 
+    function deleteLink(id){
+      if(!confirm('Delete this link?')) return;
+      state.links = state.links.filter(l=>l.id!==id);
+      saveState(); renderLinks(searchInput.value);
+    }
+
+    function moveLink(id, direction){
+      const idx = state.links.findIndex(l=>l.id===id);
+      if(idx === -1) return;
+      const newIndex = direction === 'up' ? Math.max(0, idx-1) : Math.min(state.links.length-1, idx+1);
+      if(newIndex === idx) return;
+      const tmp = state.links[idx];
+      state.links.splice(idx,1);
+      state.links.splice(newIndex,0,tmp);
+      saveState(); renderLinks(searchInput.value);
+    }
+
+    function clearForm(){
+      state.editing = null;
+      titleInput.value = urlInput.value = descInput.value = subredditInput.value = tagsInput.value = '';
+      linkCategory.selectedIndex = 0;
+      syncSubcategoriesList();
+      saveLinkBtn.textContent = 'Add Link';
+    }
+
+    // Import / Export
+    function exportJSON(){
+      const payload = JSON.stringify(state, null, 2);
+      downloadFile('links.json', payload, 'application/json');
+    }
+
+    function importJSONFile(file){
+      const reader = new FileReader();
+      reader.onload = e=>{
+        try{
+          const parsed = JSON.parse(e.target.result);
+          applyImported(parsed);
+        }catch(err){
+          alert('Invalid JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function applyImported(parsed){
+      if(Array.isArray(parsed)){
+        // assume array of links
+        state.links = parsed.map(normalizeLinkForImport);
+      } else if(parsed && typeof parsed === 'object'){
+        if(parsed.categories) state.categories = parsed.categories.map(c=>{
+          return { id: c.id || uid('cat'), name: c.name || 'Unnamed', subcategories: (c.subcategories||[]).map(s=>({id:s.id||uid('sub'), name:s.name||'Unnamed'})) };
+        });
+        if(parsed.links) state.links = parsed.links.map(normalizeLinkForImport);
+      } else {
+        alert('Unrecognized import format.');
+        return;
+      }
+      saveState(); renderCategories(); renderLinks();
+    }
+
+    function normalizeLinkForImport(raw){
+      const subredditRaw = raw.subreddit || raw.sub || '';
+      const normalizedSubreddit = normalizeSubreddit(subredditRaw);
+      return {
+        id: raw.id || uid('link'),
+        title: raw.title || raw.name || 'Untitled',
+        url: raw.url || raw.href || '',
+        description: raw.description || raw.desc || '',
+        subreddit: normalizedSubreddit,
+        categoryId: raw.categoryId || raw.category || '',
+        subcategoryId: raw.subcategoryId || raw.subcategory || '',
+        tags: raw.tags || (raw.tagsString ? raw.tagsString.split(',').map(t=>t.trim()) : [])
+      };
+    }
+
+    // generate export HTML
     function generateStandaloneHTML(){
-      // inside loop:
-      // if(l.subreddit) content += `<div class="small">Related: <a href="${l.subreddit}">${displaySubredditLabel(l.subreddit)}</a></div>`;
+      const css = `
+      body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial; background:#f7fafc; color:#0f1724; padding:28px;}
+      .container{max-width:900px;margin:0 auto;}
+      h1{font-size:22px;margin-bottom:4px}
+      h2{margin-top:14px;margin-bottom:6px;color:#334155}
+      h3{margin:0 0 6px;color:#475569}
+      a{color:#0ea5a4;text-decoration:none;font-weight:600}
+      .desc{color:#64748b;margin-top:4px;margin-bottom:8px}
+      ul{padding-left:0;list-style:none}
+      li{padding:10px;border-radius:8px;background:#ffffff;margin-bottom:8px;border:1px solid #e6eef6}
+      .meta{display:flex;justify-content:space-between;align-items:center}
+      .small{font-size:13px;color:#64748b}
+      .pill{display:inline-block;padding:6px 8px;border-radius:999px;background:#f1f5f9;color:#475569;margin-right:6px}
+      `;
+      // group by category > subcategory
+      const groups = {};
+      state.links.forEach(link=>{
+        const cat = state.categories.find(c=>c.id===link.categoryId);
+        const catName = (cat && cat.name) || 'Uncategorized';
+        const sub = cat && cat.subcategories.find(s=>s.id===link.subcategoryId);
+        const subName = (sub && sub.name) || null;
+
+        groups[catName] = groups[catName] || {};
+        const key = subName || '_none';
+        groups[catName][key] = groups[catName][key] || [];
+        groups[catName][key].push(link);
+      });
+
+      let content = `<div class="container"><h1>Your Link Directory</h1>\n`;
+      for(const [catName, subs] of Object.entries(groups)){
+        content += `<section>\n  <h2>${escapeHtml(catName)}</h2>\n`;
+        for(const [subName, links] of Object.entries(subs)){
+          if(subName !== '_none'){
+            content += `  <h3>${escapeHtml(subName)}</h3>\n`;
+          }
+          content += `  <ul>\n`;
+          links.forEach(l=>{
+            content += `    <li>\n      <div class="meta"><div><a href="${escapeHtmlAttr(l.url)}">${escapeHtml(l.title)}</a></div>\n`;
+            const tagText = (l.tags && l.tags.length) ? `<div class="small">${escapeHtml(l.tags.join(', '))}</div>` : '';
+            content += `      <div>${tagText}</div></div>\n`;
+            if(l.description) content += `      <div class="desc">${escapeHtml(l.description)}</div>\n`;
+            if(l.subreddit) {
+              const display = l.subreddit.replace(/^https?:\/\/(www\.)?reddit\.com\/?/i,'');
+              content += `      <div class="small">Related: <a href="${escapeHtmlAttr(l.subreddit)}">${escapeHtml(display)}</a></div>\n`;
+            }
+            content += `    </li>\n`;
+          });
+          content += `  </ul>\n`;
+        }
+        content += `</section>\n`;
+      }
+      content += `</div>`;
+
+      return `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8"/>\n<meta name="viewport" content="width=device-width,initial-scale=1"/>\n<title>Link Directory</title>\n<style>${css}</style>\n</head>\n<body>\n${content}\n</body>\n</html>`;
     }
 
-    // rest of app logic unchanged...
+    // download helper
+    function downloadFile(filename, content, mime='text/plain'){
+      const blob = new Blob([content], {type: mime});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 300);
+    }
+
+    // Event wiring
+    addCategoryBtn.addEventListener('click', ()=>{ addCategory(newCategoryInput.value); newCategoryInput.value=''; });
+    addSubcategoryBtn.addEventListener('click', ()=>{ addSubcategory(categoryForSub.value || (state.categories[0] && state.categories[0].id), newSubcategoryInput.value); newSubcategoryInput.value=''; });
+
+    categoriesListEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      if(action === 'select'){
+        const cat = state.categories.find(c=>c.id===id);
+        const newName = prompt('Rename category', cat.name);
+        if(newName) renameCategory(id,newName);
+      } else if(action === 'delete'){
+        deleteCategory(id);
+      }
+    });
+
+    subcategoriesListEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      const catId = btn.dataset.cat;
+      if(action === 'edit-sub'){
+        const cat = state.categories.find(c=>c.id===catId);
+        const sub = cat && cat.subcategories.find(s=>s.id===id);
+        const newName = prompt('Rename subcategory', sub.name);
+        if(newName){
+          sub.name = newName.trim();
+          saveState(); renderCategories(); renderLinks();
+        }
+      } else if(action === 'del-sub'){
+        deleteSubcategory(catId, id);
+      }
+    });
+
+    saveLinkBtn.addEventListener('click', addOrUpdateLink);
+    clearFormBtn.addEventListener('click', (e)=>{ e.preventDefault(); clearForm(); });
+
+    linksListEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const id = btn.dataset.id;
+      if(action === 'edit') editLink(id);
+      if(action === 'delete') deleteLink(id);
+      if(action === 'move-up') moveLink(id, 'up');
+      if(action === 'move-down') moveLink(id, 'down');
+    });
+
+    categoryForSub.addEventListener('change', ()=>{ renderSubcategoriesForCategory(categoryForSub.value); });
+    linkCategory.addEventListener('change', ()=>{ syncSubcategoriesList(); });
+
+    exportJsonBtn.addEventListener('click', ()=>{ exportJSON(); });
+    exportHtmlBtn.addEventListener('click', ()=>{ const html = generateStandaloneHTML(); downloadFile('link-directory.html', html, 'text/html'); });
+
+    importJsonBtn.addEventListener('click', ()=> importFileClick() );
+    importFileInput.addEventListener('change', (e)=>{ const f = e.target.files[0]; if(f) importJSONFile(f); importFileInput.value=''; });
+
+    function importFileClick(){ importFileInput.click(); }
+
+    applyPasteBtn && applyPasteBtn.addEventListener('click', ()=>{
+      try{
+        const parsed = JSON.parse(pasteImport.value);
+        applyImported(parsed);
+        pasteImport.value='';
+      }catch(e){
+        alert('Invalid JSON pasted.');
+      }
+    });
+
+    clearStorageBtn && clearStorageBtn.addEventListener('click', ()=>{
+      if(confirm('Reset everything? This will clear local storage.')){ localStorage.removeItem(STORAGE_KEY); loadState(); renderCategories(); renderLinks(); }
+    });
+
+    previewHtmlBtn.addEventListener('click', ()=>{
+      const html = generateStandaloneHTML();
+      const w = window.open('', '_blank');
+      w.document.write(html);
+      w.document.close();
+    });
+
+    searchInput.addEventListener('input', ()=> renderLinks(searchInput.value.trim()));
+
+    [titleInput, urlInput].forEach(inp=>{
+      inp.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') { e.preventDefault(); addOrUpdateLink(); }});
+    });
+
+    // Initialize
+    loadState();
+    renderCategories();
+    renderLinks();
+
+    // Expose state for debugging
+    window.LINK_DIR_STATE = state;
   </script>
 </body>
 </html>
